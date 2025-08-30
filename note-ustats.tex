@@ -224,14 +224,14 @@ Denote this sum space by
 Henceforth, let \(m \geq 2\).
 Denote
 \begin{align}
-  \pi_{0} (\eta) :=
-  & \, \pi_{0} (\eta, F) := \mathrm{E}_{F^{m}} \left[ \eta
+  \Pi_{0} (\eta) :=
+  & \, \Pi_{0} (\eta, F) := \mathrm{E}_{F^{m}} \left[ \eta
   \left( Z_{1}, \dots, Z_{m} \right) \right],
   \\
   \begin{split}
-    \forall c \in \mathbb{N}_{m - 1}, \quad \pi_{c} \left( z_{1}, \dots, z_{c};
+    \forall c \in \mathbb{N}_{m - 1}, \quad \Pi_{c} \left( z_{1}, \dots, z_{c};
     \eta \right) :=
-    & \, \pi_{c} \left( z_{1}, \dots, z_{c}; \eta, F \right) \\
+    & \, \Pi_{c} \left( z_{1}, \dots, z_{c}; \eta, F \right) \\
     :=
     & \, \mathrm{E}_{F^{m}} \left[ \eta \left( Z_{1}, \dots, Z_{m} \right) |
     Z_{1} = z_{1}, \dots, Z_{c} = z_{c} \right] \\
@@ -244,16 +244,16 @@ Denote
     \text{and} \quad \widehat{U}_{n} (\eta) :=
     & \, \widehat{U}_{n} (\eta, F)  \\
     :=
-    & \, \pi_{0} (\eta, F) + \frac{m}{n} \sum_{j = 1}^{n} \left\{ \pi_{1}
-    \left( Z_{j}; \eta, F \right) - \pi_{0} (\eta, F) \right\} \\
+    & \, \Pi_{0} (\eta, F) + \frac{m}{n} \sum_{j = 1}^{n} \left\{ \Pi_{1}
+    \left( Z_{j}; \eta, F \right) - \Pi_{0} (\eta, F) \right\} \\
     =
-    & \, \pi_{0} (\eta) + \frac{m}{n} \sum_{j = 1}^{n} \left\{ \pi_{1} \left(
-    Z_{j}; \eta \right) - \pi_{0} (\eta) \right\} .
+    & \, \Pi_{0} (\eta) + \frac{m}{n} \sum_{j = 1}^{n} \left\{ \Pi_{1} \left(
+    Z_{j}; \eta \right) - \Pi_{0} (\eta) \right\} .
   \end{split}
   \label{eqn--U-stat-proj}
 \end{align}
 In all of the above expressions, the notation expresses the fact that though the
-functions \(\pi_{c}\) and \(\widehat{U}_{n}\) all depend on both \(\eta\) and
+functions \(\Pi_{c}\) and \(\widehat{U}_{n}\) all depend on both \(\eta\) and
 \(F\), we shall suppress dependence on \(F\).
 We follow this scheme throughout, so that \(\mathrm{E} \equiv
 \mathrm{E}_{F^{n}}\) throughout.
@@ -273,9 +273,9 @@ Then, for any \(j = 1, \dots, n\),
   \mathrm{E} \left[ \eta \left( Z_{i (1)}, \dots, Z_{i (m)} \right)
   \middle| Z_{j} = z \right] =
   \begin{cases}
-    \pi_{1} (z; \eta) & \text{if } j \in
+    \Pi_{1} (z; \eta) & \text{if } j \in
     \left\{ i (1), \dots, i (m) \right\}, \\
-    \pi_{0} (\eta) & \text{otherwise}.
+    \Pi_{0} (\eta) & \text{otherwise}.
   \end{cases}
 \end{equation*}
 For fixed \(j \in \{1, \dots, n\}\), consider averaging over \(i \in
@@ -291,14 +291,14 @@ Hence
   \left[ \eta \left( Z_{i (1)}, \dots, Z_{i (m)} \right) \middle| Z_{j} \right]
   \\
   =
-  & \, m \frac{\gamma_{n - 1, m - 1}}{\gamma_{n, m}} \pi_{1} \left( Z_{j}; \eta
+  & \, m \frac{\gamma_{n - 1, m - 1}}{\gamma_{n, m}} \Pi_{1} \left( Z_{j}; \eta
   \right) + \left( 1 - m \frac{\gamma_{n - 1, m - 1}}{\gamma_{n, m}} \right)
-  \pi_{0} (\eta).
+  \Pi_{0} (\eta).
 \end{align*}
 Since \(\gamma_{n - 1, m - 1} / \gamma_{n, m} = 1 / n\),
 \begin{equation*}
   \mathrm{E} \left[ U_{n} (\eta) \middle| Z_{j} \right] = \frac{m}{n}
-  \pi_{1} \left( Z_{j}; \eta \right) + \left( 1 - \frac{m}{n} \right) \pi_{0}
+  \Pi_{1} \left( Z_{j}; \eta \right) + \left( 1 - \frac{m}{n} \right) \Pi_{0}
   (\eta).
   % \label{eqn--U-stat-proj-single-j}
 \end{equation*}
@@ -309,12 +309,12 @@ therefore
   \left( \mathrm{E} \left[ U_{n} (\eta) \middle| Z_{j} \right] - \mathrm{E}
   \left[ U_{n} (\eta) \right] \right) \\
   =
-  & \, \pi_{0} (\eta) + \sum_{j = 1}^{n} \left( \frac{m}{n}
-  \pi_{1} \left( Z_{j}; \eta \right) + \left( 1 - \frac{m}{n}
-  \right) \pi_{0} (\eta) - \pi_{0} (\eta) \right) \\
+  & \, \Pi_{0} (\eta) + \sum_{j = 1}^{n} \left( \frac{m}{n}
+  \Pi_{1} \left( Z_{j}; \eta \right) + \left( 1 - \frac{m}{n}
+  \right) \Pi_{0} (\eta) - \Pi_{0} (\eta) \right) \\
   =
-  & \, \pi_{0} (\eta) +  \frac{m}{n} \sum_{j = 1}^{n}
-  \left\{ \pi_{1} \left( Z_{j}; \eta \right) - \pi_{0} (\eta)
+  & \, \Pi_{0} (\eta) +  \frac{m}{n} \sum_{j = 1}^{n}
+  \left\{ \Pi_{1} \left( Z_{j}; \eta \right) - \Pi_{0} (\eta)
   \right\} \\
   =
   & \, \widehat{U}_{n} (\eta),
@@ -349,7 +349,7 @@ Hence, \eqref{eqn--L2-dist-proj} becomes
 The variance of \(\widehat{U}_{n} (\eta)\) is easily characterized:
 \begin{equation}
   \mathrm{Var} \left[ \widehat{U}_{n} (\eta) \right] = \frac{m^{2}}{n}
-  \mathrm{Var} \left[ \pi_{1} (Z; \eta) \right].
+  \mathrm{Var} \left[ \Pi_{1} (Z; \eta) \right].
   \label{eqn--Uhat-var-1}
 \end{equation}
 Furthermore, we can always write
@@ -369,7 +369,7 @@ For \(0 \leq c \leq m\), denote
 \begin{equation}
   \begin{split}
   \zeta_{c} (\eta) := \zeta_{c} (\eta, F) :=
-  & \, \mathrm{Var}_{F^{c}} \left[ \pi_{c} \left( Z_{1}, \dots,
+  & \, \mathrm{Var}_{F^{c}} \left[ \Pi_{c} \left( Z_{1}, \dots,
   Z_{c}; \eta, F \right) \right] \\
   =
   & \, \mathrm{Var}_{F^{c}} \left[ \mathrm{E}_{F^{m}} \left[ \eta \left( Z_{1},
@@ -482,7 +482,7 @@ and so
   \frac{2}{n (n - 1)} \left( \zeta_{2} (\eta) - 2 \zeta_{1} (\eta) \right).
   \label{eqn--L2-dist-proj-2-init}
 \end{equation}
-Since \(m = 2\), \(\pi_{2} \left( \cdot; \eta \right) = \eta (\cdot)\).
+Since \(m = 2\), \(\Pi_{2} \left( \cdot; \eta \right) = \eta (\cdot)\).
 Using \eqref{eqn--zeta-c},
 \begin{align*}
   \zeta_{2} (\eta) =
@@ -492,7 +492,7 @@ Using \eqref{eqn--zeta-c},
   \middle| Z_{1} \right] \right] + \mathrm{E} \left[ \mathrm{Var} \left[ \eta
   \left( Z_{1}, Z_{2} \right) \middle| Z_{1} \right] \right] \\
   =
-  & \, \mathrm{Var} \left[ \pi_{1} \left( Z_{1}; \eta \right) \right] +
+  & \, \mathrm{Var} \left[ \Pi_{1} \left( Z_{1}; \eta \right) \right] +
   \mathrm{E} \left[ \mathrm{Var} \left[ \eta \left( Z_{1}, Z_{2} \right)
   \middle| Z_{1} \right] \right] \\
   =
