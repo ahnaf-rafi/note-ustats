@@ -1,0 +1,40 @@
+name: Build LaTeX document
+
+on: [push]
+
+jobs:
+  build_latex:
+    runs-on: ubuntu-latest
+    permissions: write-all
+    steps:
+      - name: Set up Git repository
+        uses: actions/checkout@v4
+      - name: Compile LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: note-ustats.tex
+      - name: Create dist folder
+        run: |
+          mkdir -p dist
+          mv note-ustats.pdf dist/
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build_latex
+    permissions:
+      actions: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
