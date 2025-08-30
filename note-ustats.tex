@@ -1,0 +1,1218 @@
+\documentclass[12pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+%%%%%%%%%%%
+% Margins %
+%%%%%%%%%%%
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
+
+%%%%%%%%%%%%%%%%
+% Line Spacing %
+%%%%%%%%%%%%%%%%
+\usepackage{setspace}
+\doublespacing
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% References and links in text %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[bookmarks=true, hidelinks]{hyperref}
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{naturalnames}{hyperref}
+\hypersetup{
+pdfauthor={Ahnaf Rafi},
+colorlinks=true,
+linkcolor=blue,
+urlcolor=blue,
+citecolor=blue
+}
+
+%%%%%%%%%%%%%%%%%
+% Control lists %
+%%%%%%%%%%%%%%%%%
+\usepackage{enumitem}
+
+%%%%%%%%%%
+% Tables %
+%%%%%%%%%%
+% \usepackage{float}
+% \usepackage{booktabs}
+% \usepackage{multirow}
+% \usepackage{multicol}
+
+%%%%%%%%
+% Math %
+%%%%%%%%
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{bm}
+\usepackage{mathrsfs}
+
+% Algorithms
+% \usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+
+% Must be loaded after amsmath, but before new theorem defs.
+\usepackage[nameinlink]{cleveref}
+
+% Extra operators and symbols
+% \DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+% \DeclareMathOperator*{\Leb}{Leb}
+
+% Independence in Probability Theory and Statistics.
+\newcommand{\indep}{\mathrel{\perp \mspace{-11mu} \perp}}
+
+% Probability with normal subscripts and superscripts
+\def\Pr{\mathop{\rm Pr}\nolimits}
+
+% \crefname{subsubsubappendix}{Appendix}{appendix}
+
+% Display breaks in aligned equations
+\allowdisplaybreaks
+
+\numberwithin{equation}{section}
+
+% Theorem environments
+\theoremstyle{definition}
+% \newtheorem{definition}{Definition}
+
+% \newtheorem{assumption}{Assumption}[section]
+% \crefname{assumption}{assumption}{assumptions}
+
+% \newtheorem{asm}{Assumption}
+% \crefname{asm}{assumption}{assumptions}
+
+% \newtheorem{remark}{Remark}[section]
+
+% \newtheorem{example}{Example}[section]
+
+\newtheorem{notation}{Notation}[section]
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+
+\newtheorem{lemma}{Lemma}[section]
+% \crefname{lemma}{lemma}{lemmas}
+
+% \newtheorem{corollary}{Corollary}
+
+\usepackage{etaremune}
+
+\usepackage{calc}
+\usepackage{crossreftools}
+
+%%%%%%%%%%%%%%%%
+% Bibliography %
+%%%%%%%%%%%%%%%%
+\usepackage[
+authordate,
+sorting=nyt,
+backend=biber,
+maxcitenames=3,
+natbib
+% doi=false,
+% isbn=false,
+% url=false,
+% eprint=false
+]{biblatex-chicago}
+
+\addbibresource{note-ustats.bib}
+
+\title{Some notes on U-Statistics}
+\author{Ahnaf Rafi}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\section{Definitions of U-Statistics and V-Statistics}
+
+Throughout, all randomness is defined on a probability space \((\Omega,
+\mathscr{F}, \Pr)\) with \(\mathrm{E} [\cdot]\) and \(\mathrm{Var} [\cdot]\)
+denoting expectation and variance respectively against \(\Pr\).
+Furthermore, \(\left\{ Z_{i} \right\}_{i = 1}^{n}\) is a sample of i.i.d. random
+vectors, with \(F\) denoting their common distribution.
+Finally \(\|\cdot\|\) denotes the Euclidean norm for vectors.
+
+For \(n, m \in \mathbb{N}\) with \(n \geq m\), define
+\begin{equation}
+  \begin{split}
+    \mathbb{N}_{n} =
+    & \, \{1, \dots, n\} = \{j \in \mathbb{N} : j \leq n\}, \\
+    \mathrm{Inj}_{n, m} =
+    & \, \left\{ i \in \mathbb{N}_{n}^{m} : \left[ j, k \in
+    \mathbb{N}_{m}, j \neq k \right] \implies i (j) \neq i (k)
+    \right\}, \\
+    \mathrm{NonInj}_{n, m} =
+    & \, \mathbb{N}_{n}^{m} \setminus \mathrm{Inj}_{n, m} =
+    \left\{ i \in \mathbb{N}_{n}^{m} : \exists j, k \in \mathbb{N}_{m},
+    j \neq k \text{ such that } i (j) = i (k) \right\}.
+  \end{split}
+  \label{eqn--finite-domain-codomain-func-sets}
+\end{equation}
+In \eqref{eqn--finite-domain-codomain-func-sets}, \(\mathrm{Inj}\) stands for
+``injective'' (i.e. one-to-one) and \(\mathrm{NonInj}\) stands for
+``non-injective''.
+The cardinality of \(\mathrm{Inj}_{n, m}\) is
+\begin{equation}
+  \gamma_{n, m} := \left| \mathrm{Inj}_{n, m} \right| = \prod_{k = 0}^{m - 1} (n
+  - k).
+  \label{eqn--gammanm}
+\end{equation}
+
+For a function \(\eta \left( x_{1}, \dots, x_{m} \right)\), the associated U-
+and V-statistics are respectively:
+\begin{equation}
+  \begin{split}
+    U_{n} (\eta) =
+    & \, \frac{1}{\gamma_{n, m}} \sum_{i \in \mathrm{Inj}_{n, m}} \eta \left(
+    Z_{i (1)}, \dots, Z_{i (m)} \right),
+    \\
+    V_{n} (\eta) =
+    & \, \frac{1}{n^{m}} \sum_{i \in \mathbb{N}_{n}^{m}} \eta \left( Z_{i (1)},
+    \dots, Z_{i (m)} \right).
+  \end{split}
+  \label{eqn--U-V-stat}
+\end{equation}
+The function \(\eta\) is called a \emph{kernel} and the number of arguments
+\(m := m_{\eta}\), is called the \emph{order} of the kernel.
+Though the order \(m\) is dependent on \(\eta\), we suppress this dependence for
+brevity.
+In addition, we hold \(m\) fixed throughout and impose the restriction \(n \geq
+m\).
+
+The kernel \(\eta\) is permutation symmetric iff
+\begin{equation*}
+  \begin{gathered}
+    \text{for any permutation } \left\{ i (1), \dots, i (m) \right\} \text{ of }
+    \{1, \dots, m\}, \\
+    \eta \left( z_{i (1)}, \dots, z_{i (m)} \right) = \eta \left( z_{1},
+    \dots, z_{m} \right).
+  \end{gathered}
+\end{equation*}
+When \(\eta\) is permutation symmetric, the corresponding U-statistic in
+\eqref{eqn--U-V-stat} becomes
+\begin{equation*}
+  U_{n} (\eta) = \binom{n}{m}^{- 1} \sum_{i \in \mathrm{Inc}_{n, m}} \eta
+  \left( Z_{i (1)}, \dots, Z_{i (m)} \right),
+\end{equation*}
+where \(\mathrm{Inc}_{n, m} \subseteq \mathrm{Inj}_{n, m}\) is the collection of
+strictly increasing index vectors:
+\begin{equation}
+  \mathrm{Inc}_{n, m} = \left\{ (i (1), \dots, i (m)) \in \mathbb{N}_{n}^{m} :
+  \left[ j, l \in \mathbb{N}_{m}, j < l \right] \implies i (j) < i (l) \right\}.
+  \label{eqn--monotone-indices}
+\end{equation}
+
+\section{First order sum-space projection of U-statistics}
+
+We now consider the projection of the U-statistic \(U_{n} (\eta, F)\) onto the
+sum-space for the \(n\) i.i.d. random variables \(Z_{1}, \dots, Z_{n}\) drawn
+from \(F\).
+Denote this sum space by
+\begin{equation}
+  \mathcal{S}_{n} := \mathcal{S}_{n} (F) := \left\{ \sum_{j = 1}^{n} g_{j}
+  \left( Z_{j} \right) : \forall j \in \mathbb{N}_{n}, Z_{j} \sim F, g_{j}
+  \text{ measurable}, \int g_{j}^{2} \mathrm{d} F < \infty \right\}.
+  \label{eqn--sum-space}
+\end{equation}
+Henceforth, let \(m \geq 2\).
+Denote
+\begin{align}
+  \pi_{0} (\eta) :=
+  & \, \pi_{0} (\eta, F) := \mathrm{E}_{F^{m}} \left[ \eta
+  \left( Z_{1}, \dots, Z_{m} \right) \right],
+  \\
+  \begin{split}
+    \forall c \in \mathbb{N}_{m - 1}, \quad \pi_{c} \left( z_{1}, \dots, z_{c};
+    \eta \right) :=
+    & \, \pi_{c} \left( z_{1}, \dots, z_{c}; \eta, F \right) \\
+    :=
+    & \, \mathrm{E}_{F^{m}} \left[ \eta \left( Z_{1}, \dots, Z_{m} \right) |
+    Z_{1} = z_{1}, \dots, Z_{c} = z_{c} \right] \\
+    =
+    & \, \int \eta \left( z_{1}, \dots, z_{c}, z_{c + 1}, \dots, z_{m} \right)
+    F^{m - c} \left(
+    \mathrm{d} z_{c + 1}, \dots, \mathrm{d} z_{m} \right),
+  \end{split} \\
+  \begin{split}
+    \text{and} \quad \widehat{U}_{n} (\eta) :=
+    & \, \widehat{U}_{n} (\eta, F)  \\
+    :=
+    & \, \pi_{0} (\eta, F) + \frac{m}{n} \sum_{j = 1}^{n} \left\{ \pi_{1}
+    \left( Z_{j}; \eta, F \right) - \pi_{0} (\eta, F) \right\} \\
+    =
+    & \, \pi_{0} (\eta) + \frac{m}{n} \sum_{j = 1}^{n} \left\{ \pi_{1} \left(
+    Z_{j}; \eta \right) - \pi_{0} (\eta) \right\} .
+  \end{split}
+  \label{eqn--U-stat-proj}
+\end{align}
+In all of the above expressions, the notation expresses the fact that though the
+functions \(\pi_{c}\) and \(\widehat{U}_{n}\) all depend on both \(\eta\) and
+\(F\), we shall suppress dependence on \(F\).
+We follow this scheme throughout, so that \(\mathrm{E} \equiv
+\mathrm{E}_{F^{n}}\) throughout.
+
+\begin{lemma}
+\label{lem--U-stat-proj}
+\(\widehat{U}_{n} (\eta)\) in \eqref{eqn--U-stat-proj} is the projection
+of \(U_{n} (\eta)\) onto the sum space \(\mathcal{S}_{n}\) in
+\eqref{eqn--sum-space}.
+\end{lemma}
+
+\begin{proof}[Proof of \Cref{lem--U-stat-proj}]
+We apply \Cref{thm--proj-sum-space}.
+Take any \(i \in \mathrm{Inj}_{n, m}\).
+Then, for any \(j = 1, \dots, n\),
+\begin{equation*}
+  \mathrm{E} \left[ \eta \left( Z_{i (1)}, \dots, Z_{i (m)} \right)
+  \middle| Z_{j} = z \right] =
+  \begin{cases}
+    \pi_{1} (z; \eta) & \text{if } j \in
+    \left\{ i (1), \dots, i (m) \right\}, \\
+    \pi_{0} (\eta) & \text{otherwise}.
+  \end{cases}
+\end{equation*}
+For fixed \(j \in \{1, \dots, n\}\), consider averaging over \(i \in
+\mathrm{Inj}_{n, m}\).
+The first case happens \(m \cdot \gamma_{n - 1, m - 1}\) times.
+To see this, given an `empty' \(m\)-vector \(i\), there are \(m\) possible
+places to place \(j\) and \(\gamma_{n - 1, m - 1}\) ways to select the remaining
+elements of \(i\).
+Hence
+\begin{align*}
+  \mathrm{E} \left[ U_{n} (\eta) \middle| Z_{j} \right] =
+  & \, \frac{1}{\gamma_{n, m}} \sum_{i \in \mathrm{Inj}_{n, m}} \mathrm{E}
+  \left[ \eta \left( Z_{i (1)}, \dots, Z_{i (m)} \right) \middle| Z_{j} \right]
+  \\
+  =
+  & \, m \frac{\gamma_{n - 1, m - 1}}{\gamma_{n, m}} \pi_{1} \left( Z_{j}; \eta
+  \right) + \left( 1 - m \frac{\gamma_{n - 1, m - 1}}{\gamma_{n, m}} \right)
+  \pi_{0} (\eta).
+\end{align*}
+Since \(\gamma_{n - 1, m - 1} / \gamma_{n, m} = 1 / n\),
+\begin{equation*}
+  \mathrm{E} \left[ U_{n} (\eta) \middle| Z_{j} \right] = \frac{m}{n}
+  \pi_{1} \left( Z_{j}; \eta \right) + \left( 1 - \frac{m}{n} \right) \pi_{0}
+  (\eta).
+  % \label{eqn--U-stat-proj-single-j}
+\end{equation*}
+Apply \Cref{thm--proj-sum-space}; the projection of \(U_{n} (\eta)\) is
+therefore
+\begin{align*}
+  & \mathrm{E} \left[ U_{n} (\eta) \right] + \sum_{j = 1}^{n}
+  \left( \mathrm{E} \left[ U_{n} (\eta) \middle| Z_{j} \right] - \mathrm{E}
+  \left[ U_{n} (\eta) \right] \right) \\
+  =
+  & \, \pi_{0} (\eta) + \sum_{j = 1}^{n} \left( \frac{m}{n}
+  \pi_{1} \left( Z_{j}; \eta \right) + \left( 1 - \frac{m}{n}
+  \right) \pi_{0} (\eta) - \pi_{0} (\eta) \right) \\
+  =
+  & \, \pi_{0} (\eta) +  \frac{m}{n} \sum_{j = 1}^{n}
+  \left\{ \pi_{1} \left( Z_{j}; \eta \right) - \pi_{0} (\eta)
+  \right\} \\
+  =
+  & \, \widehat{U}_{n} (\eta),
+\end{align*}
+as desired.
+\end{proof}
+
+\section{\texorpdfstring{\(\mathscr{L}_{2}\)}{L2} distance between a U-statistic
+and its first order sum-space projection under permutation symmetry}
+
+In this section, we assume that the kernel \(\eta\) is permutation symmetric.
+Hence, the relevant set of indices to work with is \(\mathrm{Inc}_{n, m}\)
+in \eqref{eqn--monotone-indices}.
+Consider the (squared) \(\mathscr{L}_{2}\) distance between a U-statistic and
+its projection, \(\widehat{U}_{n} (\eta, F)\), onto the first order sum space
+\(\mathcal{S}_{n}\) defined in
+\eqref{eqn--sum-space}:
+\begin{equation}
+  \rho_{n} (\eta) := \rho_{n} (\eta, F) := \mathrm{E}_{F^{n}} \left[
+  \left( U_{n} (\eta) - \widehat{U}_{n} (\eta, F) \right)^{2} \right].
+  \label{eqn--L2-dist-proj}
+\end{equation}
+We can readily apply \Cref{thm--proj-L2-dist-as-dif-of-vars} since
+\(\mathcal{S}_{n}\) contains the constant (non-stochastic) random
+variables.
+Hence, \eqref{eqn--L2-dist-proj} becomes
+\begin{equation}
+  \rho_{n} (\eta) = \mathrm{Var} \left[ U_{n} (\eta) \right] - \mathrm{Var}
+  \left[ \widehat{U}_{n} (\eta) \right].
+  \label{eqn--Ustat-proj-L2-dist-as-dif-of-vars}
+\end{equation}
+The variance of \(\widehat{U}_{n} (\eta)\) is easily characterized:
+\begin{equation}
+  \mathrm{Var} \left[ \widehat{U}_{n} (\eta) \right] = \frac{m^{2}}{n}
+  \mathrm{Var} \left[ \pi_{1} (Z; \eta) \right].
+  \label{eqn--Uhat-var-1}
+\end{equation}
+Furthermore, we can always write
+\begin{equation}
+  \mathrm{Var} \left[ U_{n} (\eta) \right] = \binom{n}{m}^{- 2} \sum_{i \in
+  \mathrm{Inc}_{n, m}} \sum_{i^{\prime} \in \mathrm{Inc}_{n, m}}
+  \mathrm{Cov} \left( \eta \left( Z_{i (1)}, \dots, Z_{i (m)}, \right), \eta
+  \left( Z_{i^{\prime} (1)}, \dots, Z_{i^{\prime} (m)} \right) \right).
+  \label{eqn--Ustat-var-1}
+\end{equation}
+
+We now introduce a notation scheme that will help us to simplify
+\eqref{eqn--Ustat-var-1} and will allow us to provide a unified treatment of
+\eqref{eqn--Uhat-var-1} and \eqref{eqn--Ustat-var-1} under i.i.d. \(Z_{1},
+\dots, Z_{n}\).
+For \(0 \leq c \leq m\), denote
+\begin{equation}
+  \begin{split}
+  \zeta_{c} (\eta) := \zeta_{c} (\eta, F) :=
+  & \, \mathrm{Var}_{F^{c}} \left[ \pi_{c} \left( Z_{1}, \dots,
+  Z_{c}; \eta, F \right) \right] \\
+  =
+  & \, \mathrm{Var}_{F^{c}} \left[ \mathrm{E}_{F^{m}} \left[ \eta \left( Z_{1},
+  \dots, Z_{m} \right) \middle| Z_{1}, \dots, Z_{c} \right] \right].
+  \end{split}
+  \label{eqn--zeta-c}
+\end{equation}
+It can be shown that \(\zeta_{c} (\eta)\) has the following alternative
+representation:
+\begin{equation}
+  \zeta_{c} (\eta) =
+  \mathrm{Cov} \left( \eta \left( Z_{1}, \dots, Z_{c}, Z_{1, c + 1}, \dots,
+  Z_{1, m} \right), \eta \left( Z_{1}, \dots, Z_{c}, Z_{2, c + 1}, \dots, Z_{2,
+  m} \right) \right),
+  \label{eqn--zeta-c-cov-eta-c-common}
+\end{equation}
+where \(\left\{ Z_{j} \right\}_{j = 1}^{n}\), \(\left\{ Z_{1, j} \right\}_{j =
+1}^{n}\) and \(\left\{ Z_{2, j} \right\}_{j = 1}^{n}\) are all mutually
+independent random vectors all with distribution \(F\).
+That is, \(\zeta_{c} (\eta)\) is the covariance of \(\eta \left( Z_{i (1)},
+\dots, Z_{i (m)} \right)\) and \(\eta \left( Z_{i^{\prime} (1)}, \dots,
+Z_{i^{\prime} (m)} \right)\) when \(i\) and \(i^{\prime}\) are strictly
+increasing and have exactly \(c\) elements in common.
+Of course for \(c = 0\), \(\zeta_{0} (\eta) = 0\) by independence of the
+\(Z_{j}\)'s.
+
+Revisiting \eqref{eqn--Uhat-var-1} using \eqref{eqn--zeta-c},
+\begin{equation}
+  \mathrm{Var} \left[ \widehat{U}_{n} (\eta) \right] = \frac{m^{2}}{n} \zeta_{1}
+  (\eta).
+  \label{eqn--Uhat-var}
+\end{equation}
+For \eqref{eqn--Ustat-var-1}, we can instead use
+\eqref{eqn--zeta-c-cov-eta-c-common}.
+Since there are \(\binom{n}{m} \binom{m}{c} \binom{n - m}{m - c}\) pairs \(i,
+i^{\prime} \in \mathrm{Inc}_{n, m}\) with exactly \(c\) elements in common (see
+\Cref{thm--picking-with-common-elements} for a formal statement and proof),
+\begin{align*}
+  \mathrm{Var} \left[ U_{n} (\eta) \right] =
+    & \, \binom{n}{m}^{- 2} \sum_{c = 0}^{m} \binom{n}{m} \binom{m}{c} \binom{n
+    - m}{m - c} \zeta_{c} (\eta) \\
+    =
+    & \, \binom{n}{m}^{- 2} \sum_{c = 1}^{m} \binom{n}{m} \binom{m}{c} \binom{n
+    - m}{m - c} \zeta_{c} (\eta) \qquad [\text{by } \zeta_{0} (\eta) = 0],
+\end{align*}
+and so,
+\begin{equation}
+  \mathrm{Var} \left[ U_{n} (\eta) \right] = \sum_{c = 1}^{m} \binom{m}{c}
+  \binom{n}{m}^{- 1} \binom{n - m}{m - c} \zeta_{c} (\eta).
+  \label{eqn--Ustat-var}
+\end{equation}
+Combining \eqref{eqn--Ustat-proj-L2-dist-as-dif-of-vars}, \eqref{eqn--Uhat-var}
+and \eqref{eqn--Ustat-var},
+\begin{equation}
+  \rho_{n} (\eta) = \sum_{c = 1}^{m} \binom{m}{c} \binom{n}{m}^{- 1} \binom{n
+  - m}{m - c} \zeta_{c} (\eta) - \frac{m^{2}}{n} \zeta_{1} (\eta).
+  \label{eqn--L2-dist-proj-as-comb-sum}
+\end{equation}
+
+\begin{theorem}
+\label{thm--L2-dist-proj}
+For \(m \in \mathbb{N} \setminus \{1\}\), let \(\eta\) be a
+\(m\)\textsuperscript{th} order kernel that is permutation symmetric.
+Furthermore, let \(F\) be a probability measure such that
+\(\eta \in \mathscr{L}_{2} \left( F^{m} \right)\).
+Let \(\rho_{n} (\eta, F)\) be as defined in \eqref{eqn--L2-dist-proj}.
+In the case of \(m = 2\), we have the equality
+\begin{equation}
+  \rho_{n} (\eta, F) = \frac{2}{n (n - 1)} \left( \mathrm{E}_{F} \left[
+  \mathrm{Var}_{F^{2}} \left[ \eta \left( Z_{1}, Z_{2} \right) \middle| Z_{1}
+  \right] \right] - \mathrm{Var}_{F} \left[ \mathrm{E}_{F^{2}} \left[ \eta
+  \left( Z_{1}, Z_{2} \right) \middle| Z_{1} \right] \right] \right).
+  \label{eqn--L2-dist-proj-2}
+\end{equation}
+More generally, for any \(m \geq 2\), we can bound \(\rho_{n} (\eta, F)\)
+by
+\begin{equation}
+  \begin{split}
+  \rho_{n} (\eta, F) \leq
+  & \, \frac{m^{2} (m - 1)^{2} \left( 1 + \frac{m - 1}{n - m + 1}
+  \right)}{n^{2}} \zeta_{1} (\eta, F) \\
+  & + \sum_{c = 2}^{m} \frac{1}{\gamma_{n, c}} \cdot \frac{(m !)^{2}}{((m -
+c)!)^{2} c!}
+  \left( 1 + \delta_{n, m, c} \right) \zeta_{c} (\eta, F),
+  \end{split}
+  \label{eqn--L2-dist-proj-m}
+\end{equation}
+where for each \(c \in \{2, \dots, m\}\), the quantities \(\delta_{n, m,
+c}\) are do not depend on \(\eta\), \(F\) or the dimension of \(Z_{i}\) (except
+possibly through \(n\) and \(m\)) and satisfy \(\lim_{n \to \infty} \delta_{n,
+m, c}
+= 0\).
+\end{theorem}
+
+\subsection{Proof of \texorpdfstring{\Cref{thm--L2-dist-proj}}{Theorem
+\ref{thm--L2-dist-proj}} in the case of \texorpdfstring{\(m = 2\)}{m = 2}}
+
+For \(m = 2\), \eqref{eqn--L2-dist-proj-as-comb-sum} becomes
+\begin{align*}
+  \rho_{n} (\eta) =
+  & \, \frac{4}{n} \left( \frac{(n - 2)!}{(n - 1)!} \cdot \frac{(n - 2)!}{(n
+  - 3)!} - 1 \right) \zeta_{1} (\eta) + \binom{n}{2}^{- 1} \zeta_{2} (\eta) \\
+  =
+  & \, \frac{4}{n} \left( \frac{n - 2}{n - 1} - 1 \right) \zeta_{1} (\eta)
+  + \frac{2}{n (n - 1)} \zeta_{2} (\eta),
+\end{align*}
+and so
+\begin{equation}
+  \rho_{n} (\eta) =
+  \frac{2}{n (n - 1)} \left( \zeta_{2} (\eta) - 2 \zeta_{1} (\eta) \right).
+  \label{eqn--L2-dist-proj-2-init}
+\end{equation}
+Since \(m = 2\), \(\pi_{2} \left( \cdot; \eta \right) = \eta (\cdot)\).
+Using \eqref{eqn--zeta-c},
+\begin{align*}
+  \zeta_{2} (\eta) =
+  & \, \mathrm{Var} \left[ \eta \left( Z_{1}, Z_{2} \right) \right] \\
+  \text{[by Law of Total Variance]} \quad =
+  & \, \mathrm{Var} \left[ \mathrm{E} \left[ \eta \left( Z_{1}, Z_{2} \right)
+  \middle| Z_{1} \right] \right] + \mathrm{E} \left[ \mathrm{Var} \left[ \eta
+  \left( Z_{1}, Z_{2} \right) \middle| Z_{1} \right] \right] \\
+  =
+  & \, \mathrm{Var} \left[ \pi_{1} \left( Z_{1}; \eta \right) \right] +
+  \mathrm{E} \left[ \mathrm{Var} \left[ \eta \left( Z_{1}, Z_{2} \right)
+  \middle| Z_{1} \right] \right] \\
+  =
+  & \, \zeta_{1} (\eta) + \mathrm{E} \left[ \mathrm{Var} \left[ \eta \left(
+  Z_{1}, Z_{2} \right) \middle| Z_{1} \right] \right].
+\end{align*}
+Then, from \eqref{eqn--L2-dist-proj-2-init}, using the fact that
+\(\zeta_{1} (\eta) = \mathrm{Var} \left[ \mathrm{E} \left[ \eta \left( Z_{1},
+Z_{2} \right) \middle| Z_{1} \right] \right]\) (from \eqref{eqn--zeta-c}),
+\begin{equation*}
+  \rho_{n} (\eta) = \frac{2}{n (n - 1)} \left( \mathrm{E} \left[
+  \mathrm{Var} \left[ \eta \left( Z_{1}, Z_{2} \right) \middle| Z_{1} \right]
+  \right] - \mathrm{Var} \left[ \mathrm{E} \left[ \eta \left( Z_{1}, Z_{2}
+  \right) \middle| Z_{1} \right] \right] \right),
+\end{equation*}
+which is exactly \eqref{eqn--L2-dist-proj-2}.
+\qed
+
+\subsection{Proof of \texorpdfstring{\Cref{thm--L2-dist-proj}}{Theorem
+\ref{thm--L2-dist-proj}} in the case of \texorpdfstring{\(m > 2\)}{m > 2}}
+
+For \(m > 2\), recall that in \eqref{eqn--L2-dist-proj-as-comb-sum},
+\begin{equation*}
+  \rho_{n} (\eta) = \sum_{c = 1}^{m} \binom{m}{c} \binom{n}{m}^{- 1} \binom{n
+  - m}{m - c} \zeta_{c} (\eta) - \frac{m^{2}}{n} \zeta_{1} (\eta).
+\end{equation*}
+For \(c = m\),
+\begin{align*}
+  \binom{n}{m}^{- 1} \binom{n - m}{0} =
+  & \,
+  \frac{(n - m)! m!}{n!} = \frac{m!}{\gamma_{n, m}}
+\end{align*}
+Thus,
+\begin{equation*}
+  \begin{split}
+    \text{for } c = m, \quad
+    \binom{n}{m}^{- 1} \binom{n - m}{m - c} =
+    & \, \frac{m!}{(m - c)!} \frac{1}{\gamma_{n, c}} \left( 1 + \delta_{n, m, c}
+    \right), \\
+    \text{where } \delta_{n, m, c} = & \, 0, \text{ for each } n.
+  \end{split}
+\end{equation*}
+
+Now let \(c \in \{2, \dots, m - 1\}\).
+Then,
+\begin{align*}
+  \binom{n}{m}^{- 1} \binom{n - m}{m - c} =
+  & \, \frac{(n - m)! m!}{n!} \cdot \frac{(n - m)!}{(n - 2 m + c)! (m - c)!} \\
+  =
+  & \, \frac{m!}{(m - c)!} \cdot \frac{(n - m)!}{n!} \frac{(n - m)!}{(n - 2 m +
+  c)!}
+  \\
+  =
+  & \, \frac{m!}{(m - c)!} \cdot \frac{(n - m) \cdots (n - 2 m + c + 1)}{n
+  \cdots (n - m + 1)}.
+\end{align*}
+The numerator has \(m - c\) terms, whereas the denominator has \(m\) terms.
+Hence for fixed \(m\) we can factor out \(1 / \gamma_{n, c}\) to get
+\begin{align*}
+  \binom{n}{m}^{- 1} \binom{n - m}{m - c} =
+  & \, \frac{m!}{(m - c)!} \cdot \frac{(n - m) \cdots (n - 2 m + c + 1)}{n
+  (n - 1) \cdots (n - m + 1)} \\
+  =
+  & \, \frac{m!}{(m - c)!} \cdot \frac{1}{n \cdots (n - c + 1)} \cdot \frac{(n -
+  m) \cdots (n - 2 m + c + 1)}{(n - c) \cdots (n - m + 1)} \\
+  =
+  & \, \frac{m!}{(m - c)!} \cdot \frac{1}{\gamma_{n, c}} \cdot \frac{(n - m)
+  \cdots (n - 2 m + c + 1)}{(n - c) \cdots (n - m + 1)}.
+\end{align*}
+Factorising the ratio in the end further,
+\begin{equation*}
+  \binom{n}{m}^{- 1} \binom{n - m}{m - c} =
+  \frac{m!}{(m - c)!} \cdot \frac{1}{\gamma_{n, c}} \cdot \prod_{l = 0}^{m - c -
+  1} \left( 1 - \frac{m - c}{n - c - l}  \right).
+\end{equation*}
+Therefore, set
+\begin{equation}
+  \delta_{n, m, c} = \left[ \prod_{l = 0}^{m - c - 1} \left( 1 - \frac{m - c}{n
+  - c - l} \right) \right] - 1.
+  \label{eqn--delta-nmc}
+\end{equation}
+Then,
+\begin{equation*}
+  \begin{split}
+    \binom{n}{m}^{- 1} \binom{n - m}{m - c} =
+    & \, \frac{m!}{(m - c)!} \frac{1}{\gamma_{n, c}} \left( 1 + \delta_{n, m, c}
+    \right), \\
+    \text{where } \lim_{n \to \infty} \delta_{n, m, c} =
+    & \, 0, \text{ for each } c
+    \leq m.
+  \end{split}
+\end{equation*}
+Therefore, applying the above expression to
+\eqref{eqn--L2-dist-proj-as-comb-sum}
+\begin{align}
+  \rho_{n} (\eta) =
+  & \, \sum_{c = 1}^{m} \frac{1}{\gamma_{n, c}} \cdot \frac{(m
+  !)^{2}}{((m - c)!)^{2} c!} \left( 1 + \delta_{n, m, c} \right) \zeta_{c}
+  (\eta) - \frac{m^{2}}{n} \zeta_{1} (\eta) \nonumber \\
+  =
+  & \, \frac{m^{2}}{n} \delta_{n, m, 1} \zeta_{1} (\eta) + \sum_{c = 2}^{m}
+  \frac{1}{\gamma_{n, c}} \cdot \frac{(m !)^{2}}{((m - c)!)^{2} c!} \left( 1 +
+  \delta_{n, m, c} \right) \zeta_{c} (\eta).
+  \label{eqn--L2-dist-proj-m-1}
+\end{align}
+
+For fixed \(\eta\), visual inspection of \eqref{eqn--L2-dist-proj-m-1}, first
+suggests that the term corresponding to \(c = 1\) will exhibit the slowest
+tendency towards zero, unless \(\delta_{n, m, 1} = O (1 / n)\).
+We can show that \(\delta_{n, m, 1} = O (1 / n)\) is in fact true.
+To that end, from \eqref{eqn--delta-nmc},
+\begin{equation*}
+  \delta_{n, m, 1} = \left( 1 - \frac{m - 1}{n - 1} \right) \cdots \left( 1 -
+  \frac{m - 1}{n - m + 1}  \right) - 1.
+\end{equation*}
+By \citet[Lemma 1, p. 358]{1995billingsleyProbabilityMeasure},
+given any \(l \in \mathbb{N}\) and \(z_{1, 1}, z_{2, 1}, \dots, z_{1, l}, z_{2,
+l} \in \mathbb{C}\) with \(\left| z_{j, k} \right| \leq 1\),
+\begin{equation*}
+  \left| z_{1, 1} \cdots z_{1, l} - z_{2, 1} \cdots z_{2, l} \right| \leq
+  \sum_{k = 1}^{l} \left| z_{1, k} - z_{2, k} \right|.
+\end{equation*}
+Applying this with \(l = m - 1\), \(z_{1, j} = 1 - ((m - 1) / (n - j))\) and
+\(z_{2, j} = 1\) for every \(j = 1, \dots, m - 1\),
+\begin{equation}
+  \left| \delta_{n, m, 1} \right| \leq \sum_{k = 1}^{m - 1} \frac{m - 1}{n - k}
+  \leq (m - 1)^{2} \left( 1 + \frac{m - 1}{n - m + 1} \right) \cdot \frac{1}{n}.
+\end{equation}
+
+Revisiting \eqref{eqn--L2-dist-proj-m-1},
+\begin{align*}
+  \rho_{n} (\eta) =
+  & \, \frac{m^{2}}{n} \delta_{n, m, 1} \zeta_{1} (\eta) + \sum_{c = 2}^{m}
+  \frac{1}{\gamma_{n, c}} \cdot \frac{(m !)^{2}}{((m - c)!)^{2} c!} \left( 1 +
+  \delta_{n, m, c} \right) \zeta_{c} (\eta) \\
+  \leq
+  & \, \frac{m^{2}}{n} \left| \delta_{n, m, 1} \right| \zeta_{1} (\eta) +
+  \sum_{c = 2}^{m} \frac{1}{\gamma_{n, c}} \cdot \frac{(m !)^{2}}{((m - c)!)^{2}
+  c!} \left( 1 + \delta_{n, m, c} \right) \zeta_{c} (\eta),
+\end{align*}
+so that
+\begin{equation*}
+  \begin{split}
+  \rho_{n} (\eta) \leq
+  & \, \frac{m^{2} (m - 1)^{2} \cdot \left( 1 + \frac{m - 1}{n - m + 1}
+  \right)}{n^{2}} \zeta_{1} (\eta) \\
+  & + \sum_{c = 2}^{m} \frac{1}{\gamma_{n, c}} \cdot \frac{(m !)^{2}}{((m -
+  c)!)^{2} c!} \left( 1 + \delta_{n, m, c} \right) \zeta_{c} (\eta),
+  \end{split}
+\end{equation*}
+which is exactly \eqref{eqn--L2-dist-proj-m}.
+\qed
+
+\section{Asymptotic comparison of U- and V-statistics}
+
+\begin{theorem}
+\label{thm--u-v-asymp-compare}
+If \(q \in [1, \infty)\) and \(\max_{i \in \mathbb{N}_{n}^{m}} \mathrm{E} \left[
+\left\| \eta \left( Z_{i (1)}, \dots, Z_{i (m)} \right) \right\|^{q} \right] <
+\infty\),
+\begin{equation}
+  \mathrm{E} \left[ \left\| U_{n} (\eta) - V_{n} (\eta) \right\|^{q}
+  \right]^{\frac{1}{q}} \leq \frac{m (m - 1)}{n} \max_{i \in \mathbb{N}_{n}^{m}}
+  \mathrm{E} \left[ \left\| \eta \left( Z_{i (1)}, \dots, Z_{i (m)} \right)
+  \right\|^{q} \right]^{\frac{1}{q}}.
+  \label{eqn--u-v-asymp-compare}
+\end{equation}
+\end{theorem}
+
+\begin{proof}[Proof of \Cref{thm--u-v-asymp-compare}]
+Apply \Cref{lem--VUW-comparison-fundamental}:
+\begin{equation*}
+  \mathrm{E} \left[ \left\| U_{n} (\eta) - V_{n} (\eta) \right\|^{q}
+  \right]^{\frac{1}{q}} \leq \frac{2 \left( n^{m} - \gamma_{n, m}
+  \right)}{n^{m}}
+  \max_{i \in \mathbb{N}_{n}^{m}}
+  \mathrm{E} \left[ \left\| \eta \left( Z_{i (1)}, \dots, Z_{i (m)} \right)
+  \right\|^{q} \right]^{\frac{1}{q}}.
+\end{equation*}
+By \Cref{lem--nm-gammanm}, \(n^{m} - \gamma_{n, m} = (m (m - 1) / 2) n^{m - 1}\)
+so that \(\left( 2 \left( n^{m} - \gamma_{n, m} \right) \right) / n^{m} = (m (m
+- 1)) / n\).
+Hence \eqref{eqn--u-v-asymp-compare} follows.
+\end{proof}
+
+\begin{lemma}
+\label{lem--VUW-comparison-fundamental}
+Let \(\mathcal{I}\) be a non-empty finite set and \(\left\{ a_{\iota} : \iota
+\in \mathcal{I} \right\}\) be a subset of a normed space with norm
+\(\|\cdot\|\).
+Let \(\mathcal{I}_{0} \subseteq \mathcal{I}\) be a strict subset of
+\(\mathcal{I}\), i.e. \(\left| \mathcal{I} \setminus \mathcal{I}_{0} \right|
+\geq 1\).
+Define
+\begin{equation}
+  V = \frac{1}{|\mathcal{I}|} \sum_{\iota \in \mathcal{I}} a_{\iota}, \qquad U =
+  \frac{1}{\left| \mathcal{I}_{0} \right|} \sum_{\iota \in \mathcal{I}_{0}}
+  a_{\iota}, \qquad W = \frac{1}{|\mathcal{I}| - \left| \mathcal{I}_{0} \right|}
+  \sum_{\iota \in \mathcal{I} \setminus \mathcal{I}_{0}} a_{\iota}.
+  \label{eqn--VUW-comparison-fundamental-VUW-defs}
+\end{equation}
+Then, the following hold
+\begin{align}
+  V - U =
+  & \, \frac{|\mathcal{I}| - \left| \mathcal{I}_{0} \right|}{|\mathcal{I}|} (W
+  - U),
+  \label{eqn--VUW-comparison-fundamental-main}
+  \\
+  \|V - U\| \leq
+  & \, 2 \frac{|\mathcal{I}| - \left| \mathcal{I}_{0} \right|}{|\mathcal{I}|}
+  \max_{\iota \in \mathcal{I}} \left\| a_{\iota} \right\|.
+  \label{eqn--VUW-comparison-fundamental-norm-bound}
+\end{align}
+\end{lemma}
+
+\begin{proof}[Proof of \Cref{lem--VUW-comparison-fundamental}]
+From \eqref{eqn--VUW-comparison-fundamental-VUW-defs},
+\(|\mathcal{I}| V = \sum_{\iota \in \mathcal{I}_{0}} a_{\iota} + \sum_{\iota \in
+\mathcal{I} \setminus \mathcal{I}_{0}} a_{\iota} = \left| \mathcal{I}_{0}
+\right| U + \left( |\mathcal{I}| - \left| \mathcal{I}_{0} \right| \right) W\).
+Subtract \(|\mathcal{I}| U\) from both sides, so that \(|\mathcal{I}| (V - U) =
+\left( |\mathcal{I}| - \left| \mathcal{I}_{0} \right| \right) (W - U)\).
+Division by \(|\mathcal{I}|\) establishes
+\eqref{eqn--VUW-comparison-fundamental-main}.
+For \eqref{eqn--VUW-comparison-fundamental-norm-bound}, by
+\eqref{eqn--VUW-comparison-fundamental-main} and the triangle inequality,
+\begin{align*}
+  \|U - V\| =
+  & \, \frac{|\mathcal{I}| - \left| \mathcal{I}_{0}
+  \right|}{|\mathcal{I}|} \|U - W\| \leq \frac{|\mathcal{I}| - \left|
+  \mathcal{I}_{0} \right|}{|\mathcal{I}|} (\|U\| + \|W\|) \\
+  \leq
+  & \, 2 \frac{|\mathcal{I}| - \left| \mathcal{I}_{0} \right|}{|\mathcal{I}|}
+  \max \{\|U\|, \|W\|\}.
+\end{align*}
+Since \(U\) and \(W\) are arithmetic averages over subsets of \(\mathcal{I}\),
+we get \(\max \{\|U\|, \|W\|\} \leq \max_{\iota \in \mathcal{I}} \left\|
+a_{\iota} \right\|\) from repeated applications of the triangle inequality.
+This establishes \eqref{eqn--VUW-comparison-fundamental-norm-bound}.
+\end{proof}
+
+\begin{lemma}
+\label{lem--nm-gammanm}
+For \(n, m \in \mathbb{N}\), with \(n \geq m\), with \(\gamma_{n, m}\) as in
+\eqref{eqn--gammanm},
+\begin{equation}
+  n^{m} - \gamma_{n, m} = \frac{m (m - 1)}{2} n^{m - 1}.
+  \label{eqn--nm-gammanm}
+\end{equation}
+\end{lemma}
+
+\begin{proof}[Proof of \Cref{lem--nm-gammanm}]
+For \(m = 1\), \eqref{eqn--nm-gammanm} follows from \(\gamma_{n, 1} = n\) by
+definition in \eqref{eqn--gammanm}.
+For \(m = 2\), by definition in \eqref{eqn--gammanm},
+\(\gamma_{n, 2} = n (n - 1)\).
+Thus
+\begin{equation*}
+  n^{2} - \gamma_{n, 2} = n^{2} - n (n - 1) = n,
+\end{equation*}
+so that \eqref{eqn--nm-gammanm} follows for \(m = 2\).
+
+Now we verify \eqref{eqn--nm-gammanm} for \(m > 2\).
+Note that
+\begin{equation*}
+  n^{m} - \gamma_{n, m} = \left| \mathrm{NonInj}_{n, m} \right|,
+\end{equation*}
+where as in \eqref{eqn--finite-domain-codomain-func-sets},
+\begin{equation*}
+  \mathrm{NonInj}_{n, m} = \left\{ i \in \mathbb{N}_{n}^{m} : \exists j, k
+  \in \mathbb{N}_{m}, j \neq k \text{ such that } i (j) = i
+  (k) \right\}.
+\end{equation*}
+
+Now consider the task of picking an element from \(\mathrm{NonInj}_{n, m}\).
+Recall that we are considering the cases \(m > 2\).
+We can exhaust \(\mathrm{NonInj}_{n, m}\) by using the following steps:
+\begin{enumerate}
+  \item Pick two indices \(j, k \in \mathbb{N}_{m}\) such that \(j
+    < k\);
+  \item Select \(i (j) \in \mathbb{N}_{n}\) and set \(i (k) = i
+    (j)\);
+  \item Pick the restriction \(\left\{ i (l) : l \in \mathbb{N}_{m} \setminus
+    \{j, k\} \right\} \in \mathbb{N}_{n}^{m - 2}\) arbitrarily.
+\end{enumerate}
+There are \(m (m - 1) / 2\) ways to complete step 1.
+For each instance of step 1, there are \(n\) ways to complete step 2.
+Finally, for each instance of steps 1 and 2, there are \(n^{m - 2}\) ways to
+complete step 3.
+Therefore,
+\begin{equation*}
+  n - \gamma_{n, m} = \left| \mathrm{NonInj}_{n, m} \right| = \frac{m (m -
+  1)}{2} \cdot n^{m - 1}.
+\end{equation*}
+\end{proof}
+
+\printbibliography
+
+\newpage
+
+\appendix
+
+\section{Preliminaries on projections}
+
+Denote the set of random variables that are square-integrable against \(\Pr\) by
+\begin{equation}
+  \mathscr{L}_{2} \equiv \mathscr{L}_{2} (\Pr) = \left\{ X : \mathrm{E} \left[
+  |X|^{2} \right] = \int |X|^{2} \mathrm{d} \Pr < \infty \right\}.
+\end{equation}
+It is well known that \(\mathscr{L}_{2}\) is a Hilbert space under the
+inner product \(\langle X, Y \rangle = \mathrm{E} [X \cdot Y]\).
+That is, the inner product space \(\left( \mathscr{L}_{2}, \langle \cdot, \cdot
+\rangle \right)\) is a complete metric space under the induced normed metric:
+\begin{equation}
+  \rho_{2} \left( X, Y \right)^{2} := \|X - Y\|_{2}^{2} := \langle X - Y, X - Y
+  \rangle = \mathrm{E} \left[ |X - Y|^{2} \right] \quad \forall \ X, Y \in
+  \mathscr{L}_{2}.
+\end{equation}
+
+Let \(\mathcal{S} \subseteq \mathscr{L}_{2} (\Pr)\) and \(T \in
+\mathscr{L}_{2}\).
+\(T_{\ast} \in \mathcal{S}\) is a projection of \(T\) onto \(\mathcal{S}\) if
+and only if
+\begin{equation}
+  T_{\ast} \in \mathcal{S} \quad \text{and} \quad \mathrm{E} \left[ \left( T -
+  T_{\ast} \right)^{2} \right] \leq \mathrm{E} \left[ (T - S)^{2} \right] \quad
+  \forall S \in \mathcal{S}.
+  \label{eqn--proj-def}
+\end{equation}
+
+\subsection{Existence of projections onto closed and convex subsets}
+
+\Cref{thm--proj-exists-closed-convex} shows that a projection on \(\mathcal{S}
+\subset \mathscr{L}_{2}\) exists whenever \(\mathcal{S}\) is closed and convex.
+
+\begin{theorem}
+\label{thm--proj-exists-closed-convex}
+Let \(T \in \mathscr{L}_{2}\) and let \(\mathcal{S} \subseteq \mathscr{L}_{2}\)
+be closed and convex.
+Then there exists \(T_{\ast}\) satisfying \eqref{eqn--proj-def}.
+Furthermore, \(T_{\ast}\) is almost surely unique, i.e. if \(T_{\ast \ast}\)
+also satisfies \eqref{eqn--proj-def}, then \(\Pr \left\{ T_{\ast} \neq T_{\ast
+\ast} \right\} = 0\).
+\end{theorem}
+
+\begin{proof}[Proof of \Cref{thm--proj-exists-closed-convex}]
+Let
+\begin{equation*}
+  d_{\ast} := \inf_{S \in \mathcal{S}} \mathrm{E} \left[ (S - T)^{2} \right].
+\end{equation*}
+Then for each \(n \in \mathbb{N}\), there necessarily exists \(S_{n} \in
+\mathcal{S}\) such that
+\begin{equation*}
+  d_{\ast} \leq \mathrm{E} \left[ \left( S_{n} - T \right)^{2} \right] \leq
+  d_{\ast} + \frac{1}{n}.
+\end{equation*}
+Furthermore for any \(n, m \in \mathbb{N}\),
+\begin{align*}
+  \mathrm{E} \left[ \left( S_{n} - S_{m} \right)^{2} \right] =
+  & \, \mathrm{E} \left[ \left( S_{n} - T \right)^{2} \right] + \mathrm{E}
+  \left[ \left( S_{m} - T \right)^{2} \right] - 2 \mathrm{E} \left[ \left( S_{n}
+  - T \right) \left( S_{m} - T \right) \right], \\
+  4 \mathrm{E} \left[ \left( \frac{S_{n} + S_{m}}{2} - T \right)^{2} \right] =
+  & \, \mathrm{E} \left[ \left( S_{n} - T \right)^{2} \right] + \mathrm{E}
+  \left[ \left( S_{m} - T \right)^{2} \right] + 2 \mathrm{E} \left[ \left( S_{n}
+  - T \right) \left( S_{m} - T \right) \right].
+\end{align*}
+This implies
+\begin{equation*}
+  \mathrm{E} \left[ \left( S_{n} - S_{m} \right)^{2} \right] =
+  2 \mathrm{E} \left[ \left( S_{n} - T \right)^{2} \right] + 2 \mathrm{E}
+  \left[ \left( S_{m} - T \right)^{2} \right] - 4 \mathrm{E} \left[ \left(
+  \frac{S_{n} + S_{m}}{2} - T \right)^{2} \right].
+\end{equation*}
+Since \(\mathcal{S}\) is convex, \(\frac{1}{2} \left( S_{n} + S_{m} \right) \in
+\mathcal{S}\) and so, \(\mathrm{E} \left[ \left\{ \frac{1}{2} \left( S_{n} +
+S_{m} \right) - T \right\}^{2} \right] \geq d_{\ast}\).
+Using the upper bounds in the definition of \(S_{n}\) and \(S_{m}\), and the
+lower bound now established,
+\begin{equation*}
+  \mathrm{E} \left[ \left( S_{n} - S_{m} \right)^{2} \right] \leq
+  2 \left( d_{\ast} + \frac{1}{n} \right) + 2 \left( d_{\ast} + \frac{1}{m}
+  \right) - 4 d_{\ast} = 2 \left( \frac{1}{n} + \frac{1}{m} \right).
+\end{equation*}
+Hence, \(\left\{ S_{n} \right\}\) is Cauchy in \(\mathcal{S}\).
+Since \(\mathscr{L}_{2}\) is complete and \(\mathcal{S}\) is a closed subset of
+\(\mathscr{L}_{2}\), \(\mathcal{S}\) is also necessarily complete.
+Thus, there is a \(T_{\ast} \in \mathcal{S}\) such that
+\(\lim_{n \to \infty} \mathrm{E} \left[ \left( S_{n} - T_{\ast} \right)^{2}
+\right] = 0\).
+Then,
+\begin{align*}
+  d_{\ast} \leq
+  & \, \mathrm{E} \left[ \left( T_{\ast} - T \right)^{2} \right]
+  =
+  \mathrm{E} \left[ \left( S_{n} - T \right)^{2} \right] + \mathrm{E} \left[
+  \left( T_{\ast} - S_{n} \right)^{2} \right] + 2 \mathrm{E} \left[ \left( S_{n}
+  - T \right) \cdot \left( T_{\ast} - S_{n} \right) \right] \\
+  \leq
+  & \, \mathrm{E} \left[ \left( S_{n} - T \right)^{2} \right] + \mathrm{E}
+  \left[ \left( T_{\ast} - S_{n} \right)^{2} \right] + 2 \mathrm{E} \left[
+  \left( S_{n} - T \right)^{2} \right]^{\frac{1}{2}} \mathrm{E} \left[ \left(
+  T_{\ast} - S_{n} \right)^{2} \right]^{\frac{1}{2}}.
+\end{align*}
+Hence,
+\begin{equation*}
+  d_{\ast} \leq \mathrm{E} \left[ \left( T_{\ast} - T \right)^{2} \right] \leq
+  d_{\ast} + \frac{1}{n} + \mathrm{E} \left[ \left( T_{\ast}
+  - S_{n} \right)^{2} \right] + 2 \left( d_{\ast} + \frac{1}{n}
+  \right)^{\frac{1}{2}} \mathrm{E} \left[ \left( T_{\ast} - S_{n} \right)^{2}
+  \right]^{\frac{1}{2}}.
+\end{equation*}
+Since \(\mathrm{E} \left[ \left( T_{\ast} - S_{n} \right)^{2} \right] \to 0\),
+taking limits,
+\(\mathrm{E} \left[ \left( T_{\ast} - T \right)^{2} \right] = d_{\ast} = \inf_{S
+\in \mathcal{S}} \mathrm{E} \left[ \left( S - T \right)^{2} \right]\).
+
+Next suppose \(T_{\ast \ast}\) also satisfies \eqref{eqn--proj-def}.
+Then as before,
+\begin{equation*}
+  \mathrm{E} \left[ \left( T_{\ast} - T_{\ast \ast} \right)^{2} \right] =
+  2 \mathrm{E} \left[ \left( T_{\ast} - T \right)^{2} \right] + 2 \mathrm{E}
+  \left[ \left( T_{\ast \ast} - T \right)^{2} \right] - 4 \mathrm{E} \left[
+  \left( \frac{T_{\ast} + T_{\ast \ast}}{2} - T \right)^{2} \right].
+\end{equation*}
+Since \(T_{\ast}\) and \(T_{\ast \ast}\) both satisfy \eqref{eqn--proj-def},
+\begin{equation*}
+  \mathrm{E} \left[ \left( T_{\ast} - T_{\ast \ast} \right)^{2} \right] =
+  4 d_{\ast} - 4 \mathrm{E} \left[ \left( \frac{T_{\ast} + T_{\ast \ast}}{2} - T
+  \right)^{2} \right].
+\end{equation*}
+Since \(\mathcal{S}\) is convex, \(\frac{T_{\ast} + T_{\ast \ast}}{2} \in
+\mathcal{S}\) and so,
+\begin{equation*}
+  \mathrm{E} \left[ \left( \frac{T_{\ast} + T_{\ast \ast}}{2} - T
+  \right)^{2} \right] \geq d_{\ast}.
+\end{equation*}
+Hence,
+\begin{equation*}
+  0 \leq \mathrm{E} \left[ \left( T_{\ast} - T_{\ast \ast} \right)^{2} \right]
+  \leq 4 d_{\ast} - 4 d_{\ast} = 0.
+\end{equation*}
+The above implies that \(\Pr \left\{T_{\ast} \neq T_{\ast \ast} \right\} = 0\).
+\end{proof}
+
+\subsection{Projection onto linear subspaces and orthogonality}
+
+When the subset for projection is a linear subspace of \(\mathscr{L}_{2}\),
+a useful equivalent characterization of a projection is through an orthogonality
+condition.
+
+\begin{theorem}
+\label{thm--proj-orth-cond}
+Let \(T \in \mathscr{L}_{2}\) and \(\mathcal{S}\) be a linear subspace of
+\(\mathscr{L}_{2}\).
+Then \(T_{\ast}\) satisfies \eqref{eqn--proj-def} if and only if
+\begin{equation}
+  T_{\ast} \in \mathcal{S} \quad \text{and} \quad \mathrm{E} \left[ S \cdot
+  \left( T - T_{\ast} \right) \right] = 0 \quad \forall S \in \mathcal{S}.
+  \label{eqn--orthogonality-condition}
+\end{equation}
+Furthermore, \(T_{\ast}\) satisfying \eqref{eqn--orthogonality-condition} is
+almost surely unique.
+That is, if \(T_{\ast \ast}\) also satisfies
+\eqref{eqn--orthogonality-condition}, then \(\Pr \left\{ T_{\ast} \neq T_{\ast
+\ast} \right\} = 0\).
+\end{theorem}
+
+\begin{proof}[Proof of \Cref{thm--proj-orth-cond}]
+Suppose \(T_{\ast}\) satisfies \eqref{eqn--orthogonality-condition}.
+Then, for any \(S \in \mathcal{S}\),
+\begin{align*}
+  \mathrm{E} \left[ (T - S)^{2} \right] =
+  & \, \mathrm{E} \left[ \left( T - T_{\ast} \right)^{2} \right] + 2 \mathrm{E}
+  \left[ \left( T - T_{\ast} \right) \cdot \left( T_{\ast} - S \right) \right] +
+  \mathrm{E} \left[ \left( T_{\ast} - S \right)^{2} \right] \\
+  =
+  & \, \mathrm{E} \left[ \left( T - T_{\ast} \right)^{2} \right] + \mathrm{E}
+  \left[ \left( T_{\ast} - S \right)^{2} \right],
+\end{align*}
+where the final equality follows from \eqref{eqn--orthogonality-condition} since
+\(T_{\ast} - S \in \mathcal{S}\) by linearity of \(\mathcal{S}\).
+Therefore, since \(\mathrm{E} \left[ \left( T_{\ast} - S \right)^{2} \right]
+\geq 0\), \(T_{\ast}\) satisfies \eqref{eqn--proj-def}.
+
+Next, we prove the converse by proving its contrapositive.
+To that end, suppose that \eqref{eqn--orthogonality-condition} fails.
+That is, \(T_{\ast} \not\in \mathcal{S}\) or there exists \(S_{\ast} \in
+\mathcal{S}\) such that
+\begin{equation}
+  \mathrm{E} \left[ S_{\ast} \cdot \left( T - T_{\ast} \right) \right] \neq 0.
+  \label{eqn--orthogonality-condition-fail}
+\end{equation}
+If \(T_{\ast} \not\in \mathcal{S}\), then it is immediate that
+\eqref{eqn--proj-def} fails.
+Thus, suppose that \(T_{\ast}, S_{\ast} \in \mathcal{S}\) and
+\eqref{eqn--orthogonality-condition-fail} holds.
+Note that \eqref{eqn--orthogonality-condition-fail} necessitates \(\Pr \left\{
+S_{\ast} \neq 0 \right\} > 0\), i.e. \(S_{\ast}\) cannot be almost surely zero.
+Since \(\mathcal{S} \subseteq \mathscr{L}_{2}\), this also implies that \(0 <
+\mathrm{E} \left[ S_{\ast}^{2} \right] < \infty\).
+By linearity of \(\mathcal{S}\), \(T_{\ast} + \tau S_{\ast} \in \mathcal{S}\)
+for every \(\tau \in \mathbb{R}\), and
+\begin{equation*}
+  \mathrm{E} \left[ \left( T - T_{\ast} - \tau S_{\ast} \right)^{2} \right] =
+  \mathrm{E} \left[ \left( T - T_{\ast} \right)^{2} \right] - 2 \tau \mathrm{E}
+  \left[ S_{\ast} \cdot \left( T - T_{\ast} \right) \right] + \tau^{2}
+  \mathrm{E} \left[ S_{\ast}^{2} \right].
+\end{equation*}
+As a function of \(\tau\), the above is minimized at
+\begin{equation*}
+  \tau_{\ast} = \frac{\mathrm{E} \left[ S_{\ast} \cdot \left( T - T_{\ast}
+  \right) \right]}{ \mathrm{E} \left[ S_{\ast}^{2} \right]} \neq 0.
+\end{equation*}
+The associated minimum value is
+\begin{align*}
+  \mathrm{E} \left[ \left( T - T_{\ast} - \tau_{\ast} S_{\ast} \right)^{2}
+  \right] =
+  & \, \mathrm{E} \left[ \left( T - T_{\ast} \right)^{2} \right] -
+  \frac{\mathrm{E} \left[ S_{\ast} \cdot \left( T - T_{\ast} \right)
+  \right]^{2}}{\mathrm{E} \left[ S_{\ast}^{2} \right]} < \mathrm{E} \left[
+  \left( T - T_{\ast} \right)^{2} \right].
+\end{align*}
+This means that \eqref{eqn--proj-def} fails.
+By contrapositive, we have that if \eqref{eqn--proj-def} holds, then
+\eqref{eqn--orthogonality-condition} must also hold.
+
+Finally, to see that \(T_{\ast}\) is almost surely unique, let \(T_{\ast \ast}\)
+also satisfy \eqref{eqn--orthogonality-condition}.
+Then,
+\begin{equation*}
+  \mathrm{E} \left[ \left( T_{\ast} - T_{\ast \ast} \right)^{2} \right] =
+  \mathrm{E} \left[ \left( T_{\ast} - T_{\ast \ast} \right) \cdot \left(
+  T_{\ast} - T \right) \right] + \mathrm{E} \left[ \left( T_{\ast} - T_{\ast
+  \ast} \right) \cdot \left( T - T_{\ast \ast} \right) \right] = 0,
+\end{equation*}
+since by linearity of \(\mathcal{S}\), \(T_{\ast} - T_{\ast \ast} \in
+\mathcal{S}\).
+The above implies that \(\Pr \left\{T_{\ast} \neq T_{\ast \ast} \right\} = 0\).
+\end{proof}
+
+\subsection{Second-moment distance between a random variable and its projection}
+
+The following result provides a useful characterization of the second
+moment distance between a random variable and its projection onto a space that
+contains the constants.
+
+\begin{theorem}
+\label{thm--proj-L2-dist-as-dif-of-vars}
+Let \(T \in \mathscr{L}_{2}\) and \(\mathcal{S}\) be a
+linear subspace of \(\mathscr{L}_{2}\) containing the constants
+(i.e. non-stochastic random variables).
+Suppose the projection of \(T\) onto \(\mathcal{S}\) exists and denote this
+projection by \(T_{\ast}\).
+Then,
+\begin{equation}
+  \mathrm{E} \left[ \left( T - T_{\ast} \right)^{2} \right] =
+  \mathrm{Var} [T] - \mathrm{Var} \left[ T_{\ast} \right].
+  \label{eqn--proj-L2-dist-as-dif-of-vars}
+\end{equation}
+\end{theorem}
+
+\begin{proof}[Proof of \Cref{thm--proj-L2-dist-as-dif-of-vars}]
+By \(T_{\ast} \in \mathcal{S}\) and \eqref{eqn--orthogonality-condition},
+\begin{equation}
+  \mathrm{E} \left[ T_{\ast} \cdot \left( T - T_{\ast} \right) \right] = 0
+   \iff \mathrm{E} \left[ T \cdot T_{\ast} \right] = \mathrm{E} \left[
+   T_{\ast}^{2} \right].
+  \label{eqn--prod-mom-equal-proj-2-mom}
+\end{equation}
+Similarly, since \(\mathcal{S}\) contains the constants,
+\begin{equation}
+  \mathrm{E} \left[ T - T_{\ast} \right] = 0 \iff \mathrm{E} [T] =
+  \mathrm{E} \left[ T_{\ast} \right].
+  \label{eqn--means-equal-proj}
+\end{equation}
+Therefore, by \eqref{eqn--prod-mom-equal-proj-2-mom} and
+\eqref{eqn--means-equal-proj},
+\begin{equation*}
+  \mathrm{Cov} \left( T, T_{\ast} \right) = \mathrm{E} \left[ T T_{\ast}
+  \right] - \mathrm{E} [T] \mathrm{E} \left[ T_{\ast} \right] = \mathrm{E}
+  \left[ T_{\ast}^{2} \right] - \mathrm{E} \left[ T_{\ast} \right]^{2}.
+\end{equation*}
+Hence,
+\begin{equation}
+  \mathrm{Cov} \left( T, T_{\ast} \right) = \mathrm{Var} \left[ T_{\ast}
+  \right].
+  \label{eqn--covar-TThat-equal-var-That}
+\end{equation}
+
+Next, by \eqref{eqn--means-equal-proj}, \(\mathrm{E} \left[ T - T_{\ast} \right]
+= 0\) and so,
+\begin{equation*}
+  \mathrm{E} \left[ \left( T - T_{\ast} \right)^{2} \right] = \mathrm{Var}
+  \left[ T - T_{\ast} \right] = \mathrm{Var} [T] + \mathrm{Var} \left[
+  T_{\ast} \right] - 2 \mathrm{Cov} \left( T, T_{\ast} \right).
+\end{equation*}
+Therefore by \eqref{eqn--covar-TThat-equal-var-That},
+\begin{equation}
+  \mathrm{E} \left[ \left( T - T_{\ast} \right)^{2} \right] = \mathrm{Var}
+  [T] - \mathrm{Var} \left[ T_{\ast} \right],
+\end{equation}
+which is exactly \eqref{eqn--proj-L2-dist-as-dif-of-vars}.
+\end{proof}
+
+\subsection{Projection onto sum spaces}
+
+Suppose now that \(\left\{ Z_{j} \right\}_{j = 1}^{n}\) are independent random
+variables/vectors and let
+\begin{equation}
+  \mathcal{S} = \left\{ \sum_{j = 1}^{n} g_{j} \left( Z_{j} \right) : g_{j}
+  \text{ measurable and } \mathrm{E} \left[ g_{j} \left( Z_{j} \right)^{2}
+  \right] < \infty \text{ for all } j = 1, \dots, n \right\}.
+  \label{eqn--sum-space-1}
+\end{equation}
+
+\begin{theorem}
+\label{thm--proj-sum-space}
+Let \(\left\{ Z_{j} \right\}_{j = 1}^{n}\) be independent random variables.
+The projection of an arbitrary random variable \(T \in \mathscr{L}_{2}\) onto
+the class \(\mathcal{S}\) in \eqref{eqn--sum-space-1} is given by
+\begin{equation*}
+  T_{\ast} = \sum_{j = 1}^{n} \mathrm{E} \left[ T \middle| Z_{j} \right] - (n -
+  1) \mathrm{E} [T] = \mathrm{E} [T] + \sum_{j = 1}^{n} \left\{ \mathrm{E}
+  \left[ T \middle| Z_{j} \right] - \mathrm{E} [T] \right\}.
+  % \label{eqn--proj-sum-space}
+\end{equation*}
+\end{theorem}
+
+\begin{proof}[Proof of \Cref{thm--proj-sum-space}]
+We proceed by verifying the orthogonality condition
+\eqref{eqn--orthogonality-condition}.
+Let \(j \in \{1, \dots, n\}\) be given.
+If \(g_{j} (\cdot)\) is a measurable function with \(\mathrm{E} \left[ g_{j}
+\left( Z_{j} \right)^{2} \right] < \infty\), then certainly \(g_{j} \left( Z_{j}
+\right) \in \mathcal{S}\).
+Furthermore,
+\begin{align*}
+  \mathrm{E} \left[ g_{j} \left( Z_{j} \right) \cdot \left( T - T_{\ast} \right)
+  \right] =
+  & \, \mathrm{E} \left[ g_{j} \left( Z_{j} \right) \cdot \left\{ T - \mathrm{E}
+  [T] - \mathrm{E} \left[ T \middle| Z_{j} \right] + \mathrm{E} [T] \right\}
+  \right] \\
+  & - \sum_{\substack{l = 1 \\ l \neq j}}^{n} \mathrm{E} \left[ g_{j} \left(
+  Z_{j} \right) \cdot \left\{ \mathrm{E} \left[ T \middle| Z_{l} \right] -
+  \mathrm{E} [T] \right\} \right] \\
+  =
+  & \, \mathrm{E} \left[ g_{j} \left( Z_{j} \right) \cdot \left\{ T - \mathrm{E}
+  \left[ T \middle| Z_{j} \right] \right\}
+  \right] \\
+  [\text{by } Z_{j} \indep Z_{l}] \qquad & - \sum_{\substack{l = 1 \\ i
+  \neq j}}^{n} \mathrm{E} \left[ g_{j} \left( Z_{j} \right) \right] \cdot
+  \mathrm{E} \left[ \left\{ \mathrm{E} \left[ T \middle| Z_{l} \right] -
+  \mathrm{E} [T] \right\} \right] \\
+  =
+  & \, 0.
+\end{align*}
+In the last line above, the second term is zero since \(\mathrm{E} \left[
+\mathrm{E} \left[ T \middle| Z_{l} \right] \right] = \mathrm{E} [T]\) for every
+\(l\) and the first term is zero by definition of \(\mathrm{E} \left[ T \middle|
+Z_{j} \right]\).
+Now, take a sum of such functions \(g_{j} \left( Z_{j} \right)\) over \(j = 1,
+\dots, n\):
+\begin{equation*}
+  \mathrm{E} \left[ \left( \sum_{j = 1}^{n} g_{j} \left( Z_{j} \right) \right)
+  \cdot \left( T - T_{\ast} \right) \right] = \sum_{j = 1}^{n} \mathrm{E} \left[
+  g_{j} \left( Z_{j} \right) \cdot \left( T - T_{\ast} \right) \right] = \sum_{j
+  = 1}^{n} 0 = 0.
+\end{equation*}
+\end{proof}
+
+\section{Exercises in counting}
+
+\begin{theorem}
+\label{thm--picking-with-common-elements}
+Let \(m, p, n\) be natural numbers and \(c\) be a non-negative integer such
+that \(c \leq \min \{m, p\}\) and \(\max \{m, p\} \leq n\).
+Let \(a = \left\{ a_{i} \right\}_{i = 1}^{m}, b = \left\{ b_{i} \right\}_{i =
+1}^{p} \subseteq \{1, \dots, n\}\) where \(i \mapsto a_{i}\) and \(i \mapsto
+b_{i}\) are both strictly increasing.
+There are \(\binom{n}{m} \cdot \binom{m}{c} \cdot \binom{n - m}{p - c}\)
+ways to select \(a\) and \(b\) such that they have exactly \(c\) elements in
+common.
+\end{theorem}
+
+\begin{proof}[Proof of \Cref{thm--picking-with-common-elements}]
+Let \(C\) denote the number of ways to pick \(a\) and \(b\) with exactly \(c\)
+common elements.
+We can select \(a\) and \(b\) with exactly \(c\) common elements by first
+selecting \(a\), then selecting \(c\) elements of \(a\) that will be common with
+\(b\), and finally selecting \(b\) to ensure only those \(c\) elements are
+common to \(a\) and \(b\).
+Therefore,
+\begin{equation*}
+  \begin{split}
+    C =
+    & \, \# \text{ of ways to select } a \\
+    & \times \# \text{ of ways to select } c \text{ elements of } a \text{ in
+    common with } b \\
+    & \times \# \text{ of ways to select remaining elements of } b \\
+  \end{split}
+\end{equation*}
+Clearly,
+\begin{align*}
+  \# \text{ of ways to select } a =
+  & \, \binom{n}{m}, \\
+  \# \text{ of ways to select } c \text{ elements of } a =
+  & \, \binom{m}{c}.
+\end{align*}
+Then, consider the last problem of selecting the remaining elements of \(b\)
+that are not common with \(a\).
+Since the \(c\) common elements have already been selected, there are \(p - c\)
+remaining elements of \(b\) requiring selection.
+Since we have fulfilled the ``exactly \(c\) elements in common''
+constraint, this selection must be from \(\{1, \dots, n\} \setminus a\), which
+has cardinality \(n - m\).
+Therefore, upon fixing \(a\) and the \(c\) common elements,
+\begin{equation*}
+  \# \text{ of ways to select remaining elements of } b = \binom{n - m}{p - c}.
+\end{equation*}
+\end{proof}
+
+\end{document}
