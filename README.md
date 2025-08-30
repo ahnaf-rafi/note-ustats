@@ -1,2 +1,1 @@
-# note-ustats
-Note on U-Statistics
+# Notes on U-Statistics
